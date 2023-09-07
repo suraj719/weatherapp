@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { TailSpin } from "react-loader-spinner";
 import Pagination from "./Pagination";
 
 function WeatherDashboard() {
+  const [isloading,setIsloading] = useState(false)
   const [cities, setCities] = useState([]);
   const [search, setSearch] = useState("");
   const [err, setErr] = useState("");
@@ -45,17 +47,20 @@ function WeatherDashboard() {
     loadcities();
   }, []);
   async function fetchWeather(city) {
+    setIsloading(true)
     fetch(
       // "http://api.openweathermap.org/data/2.5/group?id=524901,703448,2643743&APPID=77003d306b25e391aca3f6d95268b3ed&units=metric"
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=77003d306b25e391aca3f6d95268b3ed&units=metric`
     ).then((res) => {
       if (res.ok) {
         res.json().then((data) => {
+          setIsloading(false)
           setErr("");
           setCities([data, ...cities]);
         });
       } else {
         res.json().then((data) => {
+          setIsloading(false)
           setErr(data.message);
         });
       }
@@ -93,6 +98,20 @@ function WeatherDashboard() {
         Add City
       </button>
       <div className="mt-5 d-flex flex-wrap wrap justify-content-center align-items-center gap-5">
+      {isloading ? <>
+        <div className="">
+        <TailSpin
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        </div>
+      </>:<>
         {currentCities.map((city, id) => (
           <div className="card p-5" key={city.name}>
             <h2>{city.name}</h2>
@@ -103,6 +122,7 @@ function WeatherDashboard() {
             <button onClick={() => deleteCity(city)}>Delete</button>
           </div>
         ))}
+        </>}
       </div>
       <Pagination PostsPerPage={postsPerPage} totalPosts={cities.length} paginate={paginate}/>
     </div>
