@@ -37,7 +37,7 @@ function WeatherDashboard() {
   // };
   const loadcities = () => {
     fetch(
-      "http://api.openweathermap.org/data/2.5/group?id=524901,703448,2643743,2172797,3245,18007&APPID=77003d306b25e391aca3f6d95268b3ed&units=metric"
+      "https://api.openweathermap.org/data/2.5/group?id=524901,703448,2643743,2172797,3245,18007&APPID=77003d306b25e391aca3f6d95268b3ed&units=metric"
     )
       .then((res) => res.json())
       .then((data) => setCities(data.list));
